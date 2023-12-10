@@ -1,0 +1,93 @@
+import java.util.*;
+
+public class Main{
+
+ 
+    private static int[][] findPairs(int[] arr, int target) {
+        int[][] pairs = new int[arr.length][2];  
+        int count = 0;  
+        for (int i = 0; i < arr.length-1; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[i] + arr[j] == target) {  
+                    pairs[count][0] = arr[i]; 
+                    pairs[count][1] = arr[j];  
+                    count++;  
+                    break; 
+                }
+            }
+        }
+
+        return Arrays.copyOf(pairs, count);  
+    }
+ 
+	 
+    private static int[] mergeArray(int[][] arr) {
+    	int newSize = arr[1].length * arr.length;  
+        int[] mergedArray = new int[newSize];  
+        int count = 0;  
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+            	mergedArray[count] = arr[i][j]; 
+            	count++;  
+            }
+        }
+        
+        Arrays.sort(mergedArray); 
+        
+        return mergedArray;  
+    }
+ 
+	
+ 
+    private static void findDoublePairs(int[] arr, int target, int index, int sum, List<Integer> current, List<List<Integer>> result) {
+ 
+        if (sum == target) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+ 
+        if (index >= arr.length || sum > target) {
+            return;
+        }
+
+ 
+        for (int i = index; i < arr.length; i++) {
+            current.add(arr[i]); 
+            findDoublePairs(arr, target, i + 1, sum + arr[i], current, result);  
+            current.remove(current.size() - 1);  
+        }
+    }
+ 
+
+ 
+    public static List<List<Integer>> findDoublePairs(int[] arr, int target) {
+        List<List<Integer>> result = new ArrayList<>();  
+        findDoublePairs(arr, target, 0, 0, new ArrayList<>(), result);  
+        return result;  
+    }
+ 
+    public static void main(String[] args) {
+       System.out.print("Please enter the length of the array");
+       Scanner sc=new Scanner(System.in);
+       int arraylength=sc.nextInt();
+       System.out.print("Please enter the target");
+       int target=sc.nextInt();
+       int[] array=new int[arraylength];
+       for(int gu=0;gu<arraylength;gu++)
+       {
+           array[gu]=sc.nextInt();
+       }
+
+        int[][] pairs = findPairs(array, target);  
+        System.out.println("First Combination For "+ target + Arrays.deepToString(pairs));
+
+        int[] mergedArray = mergeArray(pairs);  
+        System.out.println("Merge Into a single Array : " + Arrays.toString(mergedArray));
+
+        int doubleTarget = target * 2;
+        List<List<Integer>> answer = findDoublePairs(array, doubleTarget);
+      	System.out.println("Second Combination For "+ doubleTarget + " : " + answer);
+    }
+
+}
